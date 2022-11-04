@@ -38,6 +38,9 @@ fn main(){
     // 台形補正処理
     let img_trapezoid_corrected = treatment::correct_trapezoid(img_pretreatment);
 
+    // 傾き補正処理
+    // let img_tilt_corrected = treatment::correct_tilt(img_trapezoid_corrected);
+
     // 全ての処理が終わったあと、画像を出力する
     println!("画像を出力します。");
     imwrite("output.jpg", &img_trapezoid_corrected, &Vector::new());

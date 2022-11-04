@@ -12,6 +12,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "ang"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47a1c6e70361eb28c1d29ef6b84f9fd024670627b087c1974abe739547679b06"
+dependencies = [
+ "approx",
+ "num-traits",
+]
+
+[[package]]
+name = "approx"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cab112f0a86d568ea0e627cc1d6be74a1e9cd55214684db5561995f6dad897c6"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -192,6 +211,7 @@ checksum = "a3f87b73ce11b1619a3c6332f45341e0047173771e8b8b73f87bfeefb7b56244"
 name = "rust_image_scan"
 version = "0.1.0"
 dependencies = [
+ "ang",
  "ferris-says",
  "mecab",
  "opencv",
