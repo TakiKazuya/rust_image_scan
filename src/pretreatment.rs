@@ -1,6 +1,4 @@
-use opencv::core::{Mat, Vector, Size, Point, BORDER_REPLICATE, Scalar};
-use opencv::imgproc::{get_structuring_element, morphology_ex, MORPH_RECT, MORPH_CLOSE, MORPH_OPEN};
-use opencv::imgcodecs::imwrite;
+use opencv::core::{Mat};
 
 mod threshold;
 mod morphology;

@@ -1,6 +1,6 @@
 use opencv::core::{Mat, Vector, Point, Size, DECOMP_LU, Point2f};
 use opencv::imgproc::{approx_poly_dp, arc_length, contour_area, get_perspective_transform, warp_perspective};
-use opencv::imgcodecs::{IMREAD_GRAYSCALE, IMREAD_COLOR, imwrite};
+use opencv::imgcodecs::{IMREAD_COLOR};
 use opencv::types::{VectorOfPoint, VectorOfPoint2f, VectorOfVectorOfPoint};
 use crate::SOURCE_IMAGE_PATH;
 
@@ -150,7 +150,7 @@ pub fn correct_trapezoid(left_up: Point, left_down: Point, right_up: Point, righ
 
     let coordinate: Vector<Point2f> = Vector::from(vec![left_up, left_down, right_down, right_up]);
 
-    let mut m;
+    let m;
     match get_perspective_transform(&vertex_points, &coordinate, DECOMP_LU) {
         Ok(mat) => {
             println!("{:?}", mat);
@@ -161,7 +161,7 @@ pub fn correct_trapezoid(left_up: Point, left_down: Point, right_up: Point, righ
         }
     };
 
-    let mut src_img;
+    let src_img;
     let result_read_img = opencv::imgcodecs::imread(SOURCE_IMAGE_PATH, IMREAD_COLOR);
     match result_read_img {
         Ok(img) => src_img = img,

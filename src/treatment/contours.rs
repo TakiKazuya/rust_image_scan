@@ -1,7 +1,7 @@
-use opencv::core::{Mat, Point, no_array, Vector};
+use opencv::core::{Mat, Point, no_array};
 use opencv::types::VectorOfVectorOfPoint;
 use opencv::imgproc::{find_contours, RETR_LIST, CHAIN_APPROX_SIMPLE, LINE_8, INTER_MAX, draw_contours};
-use opencv::imgcodecs::{IMREAD_COLOR, imwrite};
+use opencv::imgcodecs::{IMREAD_COLOR};
 
 use crate::{SOURCE_IMAGE_PATH, colors};
 
@@ -9,7 +9,7 @@ pub fn extract(img: Mat) -> VectorOfVectorOfPoint {
     println!("輪郭抽出処理開始");
 
     // 前処理後の画像
-    let mut src_img_pretreatment = img.clone();
+    let src_img_pretreatment = img.clone();
 
     // 抽出した輪郭の出力先を定義
     let mut contours = VectorOfVectorOfPoint::default();
