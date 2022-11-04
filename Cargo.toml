@@ -1,0 +1,12 @@
+[package]
+name = "rust_image_scan"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ferris-says = "0.2"
+mecab = "*"
+serde_json = "1.0"
+opencv = "0.53"
