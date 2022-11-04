@@ -7,7 +7,7 @@ use opencv::core::NormTypes::NORM_L1;
 use std::error::Error;
 
 mod pretreatment;
-mod contours;
+mod treatment;
 mod colors;
 
 const SOURCE_IMAGE_PATH: &str = "image.jpg";
@@ -45,7 +45,7 @@ fn main(){
 
     ////// 輪郭の抽出ここから//////
 
-    let contours = contours::extract(img_pretreatment);
+    let contours = treatment::run(img_pretreatment);
 
     ////// 輪郭の抽出ここまで //////
 
