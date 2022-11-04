@@ -35,23 +35,8 @@ fn main(){
     // 前処理
     let img_pretreatment = pretreatment::run(src_img);
 
-    // 輪郭の抽出
-    let contours = treatment::get_contours(img_pretreatment);
-
-    // 面積が最大になる輪郭を取得
-    let max_contour = treatment::get_max_contours(contours);
-
-    // 図形の周囲の長さ取得
-    let arc_len = treatment::get_arc_len(&max_contour);
-
-    // 図形の頂点抽出
-    let vertex_points = treatment::get_vertex_points(&max_contour, arc_len);
-
-    // 座標を左上、右上、右下、左下に分類する
-    let (left_up, left_down, right_up, right_down) = treatment::split_vertex_points(&vertex_points);
-
     // 台形補正処理
-    let img_trapezoid_corrected = treatment::correct_trapezoid(left_up, left_down, right_up, right_down, &vertex_points);
+    let img_trapezoid_corrected = treatment::correct_trapezoid(img_pretreatment);
 
     // 全ての処理が終わったあと、画像を出力する
     println!("画像を出力します。");
