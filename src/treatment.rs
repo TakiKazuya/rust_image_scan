@@ -1,6 +1,8 @@
-use opencv::core::{Mat, Vector, Point};
-use opencv::imgproc::{approx_poly_dp, arc_length, contour_area};
-use opencv::types::{VectorOfPoint, VectorOfVectorOfPoint};
+use opencv::core::{Mat, Vector, Point, Size, DECOMP_LU, Point2f};
+use opencv::imgproc::{approx_poly_dp, arc_length, contour_area, get_perspective_transform, warp_perspective};
+use opencv::imgcodecs::{IMREAD_GRAYSCALE, IMREAD_COLOR, imwrite};
+use opencv::types::{VectorOfPoint, VectorOfPoint2f, VectorOfVectorOfPoint};
+use crate::SOURCE_IMAGE_PATH;
 
 mod contours;
 
@@ -110,4 +112,73 @@ pub fn split_vertex_points(vertex_points: &Vector<Point>) -> (Point, Point, Poin
     println!("right_down: {:?}", right_down);
 
     (left_up, left_down, right_up, right_down)
+}
+
+pub fn correct_trapezoid(left_up: Point, left_down: Point, right_up: Point, right_down: Point, vertex_points: &Vector<Point>) -> Mat {
+    // 台形補正
+
+    let upper_line = (right_up.x - left_up.x).abs() + (right_up.y - left_up.y).abs();
+    let downer_line = (right_down.x - left_down.x).abs() + (right_down.y - left_down.y).abs();
+    let left_line = (left_up.x - left_down.x).abs() + (left_up.y - left_down.y).abs();
+    let right_line = (right_up.x - right_down.x).abs() + (right_up.y - right_down.y).abs();
+
+    let max_x = if upper_line > downer_line {
+        upper_line
+    } else {
+        downer_line
+    };
+
+    let max_y = if left_line > right_line {
+        left_line
+    } else {
+        right_line
+    };
+
+    // 元となる座標をVector<Point2f>に変換する
+
+    let mut vec_vertex_points2f: Vec<Point2f> = vec![];
+    for p in vertex_points.iter() {
+        vec_vertex_points2f.push(Point2f::new(p.x as f32, p.y as f32));
+    };
+
+    let vertex_points= VectorOfPoint2f::from(vec_vertex_points2f);
+
+    let left_up = Point2f::new(0.0,0.0);
+    let left_down = Point2f::new(0.0, max_y as f32);
+    let right_down = Point2f::new(max_x as f32, max_y as f32);
+    let right_up = Point2f::new(max_x as f32, 0.0);
+
+    let coordinate: Vector<Point2f> = Vector::from(vec![left_up, left_down, right_down, right_up]);
+
+    let mut m;
+    match get_perspective_transform(&vertex_points, &coordinate, DECOMP_LU) {
+        Ok(mat) => {
+            println!("{:?}", mat);
+            m= mat;
+        },
+        Err(code) => {
+            panic!("Error. Message: {}", code)
+        }
+    };
+
+    let mut src_img;
+    let result_read_img = opencv::imgcodecs::imread(SOURCE_IMAGE_PATH, IMREAD_COLOR);
+    match result_read_img {
+        Ok(img) => src_img = img,
+        Err(code) => {
+            print!("code: {:?}", code);
+            panic!();
+        }
+    };
+
+    let mut img_corrected = Mat::default();
+    match warp_perspective(&src_img, &mut img_corrected, &m, Size::new(max_x, max_y), 0, 0, Default::default()) {
+        Ok(_) => {
+            println!("success");
+        },
+        Err(code) => {
+            panic!("{}", code);
+        }
+    }
+    img_corrected
 }
