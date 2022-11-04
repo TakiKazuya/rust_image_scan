@@ -57,18 +57,7 @@ fn main(){
 
     ////// 図形の周囲の長さ取得ここから //////
 
-    let result_arc_length = arc_length(&max_contour, true);
-    let arc_len;
-    match result_arc_length {
-        Ok(length) => {
-            arc_len = length;
-            println!("arc_len: {}", arc_len)
-        },
-        Err(code) => {
-            print!("図形の周囲の長さの取得に失敗しました。 Message: {}", code);
-            panic!();
-        }
-    };
+    let arc_len = treatment::get_arc_len(&max_contour);
 
     ////// 図形の周囲の長さ取得ここまで //////
 

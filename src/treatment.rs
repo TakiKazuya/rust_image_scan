@@ -1,5 +1,5 @@
 use opencv::core::{Mat, Vector, Point};
-use opencv::imgproc::contour_area;
+use opencv::imgproc::{arc_length, contour_area};
 use opencv::types::VectorOfVectorOfPoint;
 
 mod contours;
@@ -35,4 +35,22 @@ pub fn get_max_contours(contours: VectorOfVectorOfPoint) -> Vector<Point> {
 
     println!("面積が最大になる輪郭を取得する処理終了");
     max_contour
+}
+
+pub fn get_arc_len(max_contour: &Vector<Point>) -> f64 {
+    // 図形の周囲の長さ取得
+
+    let result_arc_length = arc_length(&max_contour, true);
+    let arc_len;
+    match result_arc_length {
+        Ok(length) => {
+            arc_len = length;
+            println!("arc_len: {}", arc_len)
+        },
+        Err(code) => {
+            print!("図形の周囲の長さの取得に失敗しました。 Message: {}", code);
+            panic!();
+        }
+    };
+    arc_len
 }
