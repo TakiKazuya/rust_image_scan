@@ -1,6 +1,6 @@
 use opencv::core::{Mat, Vector, Point};
-use opencv::imgproc::{arc_length, contour_area};
-use opencv::types::VectorOfVectorOfPoint;
+use opencv::imgproc::{approx_poly_dp, arc_length, contour_area};
+use opencv::types::{VectorOfPoint, VectorOfVectorOfPoint};
 
 mod contours;
 
@@ -53,4 +53,19 @@ pub fn get_arc_len(max_contour: &Vector<Point>) -> f64 {
         }
     };
     arc_len
+}
+
+pub fn get_vertex_points(max_contour: &Vector<Point>, arc_len: f64) -> Vector<Point> {
+    // 図形の頂点抽出
+
+    let mut vertex_points = VectorOfPoint::default();
+    let result_approx_contour = approx_poly_dp(&max_contour, &mut vertex_points, 0.1 * arc_len, true);
+    if let Err(code) = result_approx_contour {
+        println!("頂点抽出に失敗しました。 Message: {}", code);
+        panic!();
+    }
+
+    println!("vertex_points: {:?}", &vertex_points);
+
+    vertex_points
 }

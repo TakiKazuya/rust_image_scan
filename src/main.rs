@@ -63,36 +63,7 @@ fn main(){
 
     ////// 図形の頂点抽出ここから //////
 
-    let mut vertex_points = VectorOfPoint::default();
-    let result_approx_contour = approx_poly_dp(&max_contour, &mut vertex_points, 0.1 * arc_len, true);
-    if let Err(code) = result_approx_contour {
-        println!("頂点抽出に失敗しました。 Message: {}", code);
-        panic!();
-    }
-
-    println!("vertex_points: {:?}", &vertex_points);
-
-    // 頂点を描画した画像の出力先(元画像に頂点を描画して出力する)
-    let mut dst_img_draw_vertex;
-    let result_read_img = opencv::imgcodecs::imread(SOURCE_IMAGE_PATH, IMREAD_COLOR);
-    match result_read_img {
-        Ok(img) => dst_img_draw_vertex = img,
-        Err(code) => {
-            print!("code: {:?}", code);
-            panic!();
-        }
-    };
-
-    // 頂点を一つずつ取り出して描画していく
-    for point in vertex_points.iter() {
-        circle(&mut dst_img_draw_vertex, point, 3, colors::red(), 5, 0, 0);
-    }
-
-    // let result_write = imwrite("output_vertex.jpg", &dst_img_draw_vertex, &Vector::new());
-    // if let Err(code) = result_write {
-    //     println!("頂点描画後の出力に失敗しました。 Message: {}", code);
-    //     panic!();
-    // }
+    let vertex_points = treatment::get_vertex_points(&max_contour, arc_len);
 
     ////// 図形の頂点抽出ここまで //////
 
