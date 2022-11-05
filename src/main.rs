@@ -10,7 +10,7 @@ const SOURCE_IMAGE_PATH: &str = "image.jpg";
 
 fn main(){
     // 元画像を読み込み
-    println!("画像の読み込みを開始します。");
+    // println!("画像の読み込みを開始します。");
 
     // 処理元の画像を定義
     let src_img;
@@ -40,6 +40,6 @@ fn main(){
     println!("OCR結果： `{}`", words);
 
     // 全ての処理が終わったあと、画像を出力する
-    println!("画像を出力します。");
+    // println!("画像を出力します。");
     imwrite("output.jpg", &img_treatment, &Vector::new());
 }

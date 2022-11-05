@@ -4,7 +4,7 @@ mod threshold;
 mod morphology;
 
 pub fn run(image: Mat) -> Mat {
-    println!("前処理開始");
+    // println!("前処理開始");
 
     // ２値化処理
     let img_threshold = threshold::run(image);
@@ -17,6 +17,6 @@ pub fn run(image: Mat) -> Mat {
 
     // imwrite("output_pretreatment.jpg", &img_opened, &Vector::new());
 
-    println!("前処理終了");
+    // println!("前処理終了");
     img_opened
 }

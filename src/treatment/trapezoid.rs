@@ -63,7 +63,7 @@ pub fn correct_trapezoid(src_img: Mat) -> Mat {
     let m;
     match get_perspective_transform(&vertex_points, &coordinate, DECOMP_LU) {
         Ok(mat) => {
-            println!("{:?}", mat);
+            // println!("{:?}", mat);
             m= mat;
         },
         Err(code) => {
@@ -74,7 +74,7 @@ pub fn correct_trapezoid(src_img: Mat) -> Mat {
     let mut img_corrected = Mat::default();
     match warp_perspective(&src_img, &mut img_corrected, &m, Size::new(max_x, max_y), 0, 0, Default::default()) {
         Ok(_) => {
-            println!("success");
+            // println!("success");
         },
         Err(code) => {
             panic!("{}", code);
@@ -90,7 +90,7 @@ fn get_contours(image: Mat) -> VectorOfVectorOfPoint {
 
 //面積が最大になる輪郭を取得
 fn get_max_contours(contours: VectorOfVectorOfPoint) -> Vector<Point> {
-    println!("面積が最大になる輪郭を取得する処理開始");
+    // println!("面積が最大になる輪郭を取得する処理開始");
 
     // 輪郭の面積を保存するベクタを定義する。 要素の型はf64
     // 抽出した輪郭(contours)から面積を取得し、配列に追加していく。
@@ -98,7 +98,7 @@ fn get_max_contours(contours: VectorOfVectorOfPoint) -> Vector<Point> {
         contour_area(&contour, false).unwrap_or(0.0)
     }).collect();
 
-    println!("contour_areas: {:?}", contour_areas);
+    // println!("contour_areas: {:?}", contour_areas);
 
     // 最大値を取得する。
     let max_area = contour_areas.iter().fold(0.0/0.0, |m, v| v.max(m));
@@ -109,9 +109,9 @@ fn get_max_contours(contours: VectorOfVectorOfPoint) -> Vector<Point> {
     // 取得したインデックスから輪郭の情報を取得する。
     let max_contour = contours.get(index).unwrap();
 
-    println!("面積が最大になる輪郭 -> {:?}", max_contour);
+    // println!("面積が最大になる輪郭 -> {:?}", max_contour);
 
-    println!("面積が最大になる輪郭を取得する処理終了");
+    // println!("面積が最大になる輪郭を取得する処理終了");
     max_contour
 }
 
@@ -123,7 +123,7 @@ fn get_arc_len(max_contour: &Vector<Point>) -> f64 {
     match result_arc_length {
         Ok(length) => {
             arc_len = length;
-            println!("arc_len: {}", arc_len)
+            // println!("arc_len: {}", arc_len)
         },
         Err(code) => {
             print!("図形の周囲の長さの取得に失敗しました。 Message: {}", code);
@@ -142,7 +142,7 @@ fn get_vertex_points(max_contour: &Vector<Point>, arc_len: f64) -> Vector<Point>
         panic!();
     }
 
-    println!("vertex_points: {:?}", &vertex_points);
+    // println!("vertex_points: {:?}", &vertex_points);
 
     vertex_points
 }
@@ -181,10 +181,10 @@ fn split_vertex_points(vertex_points: &Vector<Point>) -> (Point, Point, Point, P
     let right_up = right.first().unwrap().to_owned();
     let right_down = right.last().unwrap().to_owned();
 
-    println!("left_up: {:?}", left_up);
-    println!("left_down: {:?}", left_down);
-    println!("right_up: {:?}", right_up);
-    println!("right_down: {:?}", right_down);
+    // println!("left_up: {:?}", left_up);
+    // println!("left_down: {:?}", left_down);
+    // println!("right_up: {:?}", right_up);
+    // println!("right_down: {:?}", right_down);
 
     (left_up, left_down, right_up, right_down)
 }

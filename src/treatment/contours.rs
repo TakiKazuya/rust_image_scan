@@ -6,7 +6,7 @@ use opencv::imgcodecs::{IMREAD_COLOR};
 use crate::{SOURCE_IMAGE_PATH, colors};
 
 pub fn extract(img: Mat) -> VectorOfVectorOfPoint {
-    println!("輪郭抽出処理開始");
+    // println!("輪郭抽出処理開始");
 
     // 前処理後の画像
     let src_img_pretreatment = img.clone();
@@ -46,6 +46,6 @@ pub fn extract(img: Mat) -> VectorOfVectorOfPoint {
     //     panic!();
     // }
 
-    println!("輪郭抽出処理終了");
+    // println!("輪郭抽出処理終了");
     contours
 }
