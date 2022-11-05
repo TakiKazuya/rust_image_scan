@@ -4,12 +4,8 @@ mod trapezoid;
 mod contours;
 mod tilt;
 
-// 台形補正
-pub fn correct_trapezoid(image: Mat) -> Mat {
-    trapezoid::correct_trapezoid(image)
-}
-
-// 傾き補正
-pub fn correct_tilt(image: Mat) -> Mat {
-    tilt::correct_tilt(image)
+pub fn run(image: Mat) -> Mat {
+    let img_trapezoid_corrected = trapezoid::correct_trapezoid(image);
+    let img_tilt_corrected = tilt::correct_tilt(img_trapezoid_corrected);
+    img_tilt_corrected
 }

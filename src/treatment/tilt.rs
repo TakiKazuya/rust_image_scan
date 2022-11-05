@@ -1,27 +1,28 @@
+use std::borrow::Borrow;
 use std::collections::HashMap;
 use opencv::core::{CV_PI, Point, Scalar, Vector, Size, MatTrait, Point2f, BORDER_CONSTANT, MatTraitManual, Mat};
 use opencv::imgcodecs::{imread, imwrite, IMREAD_GRAYSCALE, IMREAD_COLOR};
 use opencv::imgproc::{canny, hough_lines_p, line, warp_affine, get_rotation_matrix_2d, WARP_INVERSE_MAP, threshold, THRESH_OTSU, cvt_color, COLOR_BGR2GRAY};
 use opencv::types::{VectorOfVec4i};
 use ang::atan2;
+use crate::pretreatment;
 
 
-pub fn correct_tilt(image: Mat) -> Mat {
-    let width = image.cols();
-    let height = image.rows();
+pub fn correct_tilt(src_img: Mat) -> Mat {
+    let img_pretreatment = pretreatment::run(src_img.clone());
 
-    let mut gray_img = Mat::default();
-    cvt_color(&image, &mut gray_img, COLOR_BGR2GRAY, 0);
+    let width = img_pretreatment.cols();
+    let height = img_pretreatment.rows();
 
-    let max_thresh_val = threshold(&gray_img, &mut Mat::default(), 0.0, 255.0, THRESH_OTSU).unwrap();
+    let max_thresh_val = threshold(&img_pretreatment, &mut Mat::default(), 0.0, 255.0, THRESH_OTSU).unwrap();
     let min_thresh_val = max_thresh_val * 0.5;
-    let max_line_gap = (((width * width) + (height * height)) as f64).sqrt();
 
     // ハフ変換による直線検出
-    let mut line_img = image.clone();
+    let max_line_gap = (((width * width) + (height * height)) as f64).sqrt();
     let mut lines= VectorOfVec4i::default();
     let threshold_val_for_hough = (max_thresh_val * 2.0) as i32;
-    hough_lines_p(&gray_img, &mut lines, 1.0, CV_PI / 180.0, threshold_val_for_hough, 0.0, max_line_gap);
+
+    hough_lines_p(&img_pretreatment, &mut lines, 1.0, CV_PI / 180.0, threshold_val_for_hough, 0.0, max_line_gap);
 
     // 線分の角度の配列を作成する
     let mut angles = vec![];
@@ -34,17 +35,15 @@ pub fn correct_tilt(image: Mat) -> Mat {
         angles.push(angle);
     }
 
-    println!("ここ{:?}", &lines);
-
     // 角度の配列から最頻値を取得(複数ある場合は最初の要素を選択)
     let angle = get_mode(&angles).first().unwrap().clone();
 
     // 角度が0or90の場合は何もしない。
     // それ以外はアフィン変換
     let result_img = if angle.abs() == 0 || angle.abs() == 90 {
-        image
+        src_img
     } else {
-        let mut dst_img = image.clone();
+        let mut dst_img = src_img.clone();
         let center = Point2f::new((width/2) as f32, (height/2) as f32); // 回転中心
         let rotation_angle = (angle - 180) as f64; // 回転する角度
 
@@ -55,7 +54,7 @@ pub fn correct_tilt(image: Mat) -> Mat {
                 });
 
         let size = Size::new(width, height); // 出力画像のサイズ
-        let result_affine = warp_affine(&image, &mut dst_img, &m, size, WARP_INVERSE_MAP, BORDER_CONSTANT, Scalar::default());
+        let result_affine = warp_affine(&src_img, &mut dst_img, &m, size, WARP_INVERSE_MAP, BORDER_CONSTANT, Scalar::default());
 
         match result_affine {
             Ok(_) => {

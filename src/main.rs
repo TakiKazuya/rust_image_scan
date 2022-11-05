@@ -32,16 +32,9 @@ fn main(){
         }
     };
 
-    // 前処理
-    let img_pretreatment = pretreatment::run(src_img);
-
-    // 台形補正処理
-    let img_trapezoid_corrected = treatment::correct_trapezoid(img_pretreatment);
-
-    // 傾き補正処理
-    // let img_tilt_corrected = treatment::correct_tilt(img_trapezoid_corrected);
+    let img_treatment = treatment::run(src_img);
 
     // 全ての処理が終わったあと、画像を出力する
     println!("画像を出力します。");
-    imwrite("output.jpg", &img_trapezoid_corrected, &Vector::new());
+    imwrite("output.jpg", &img_treatment, &Vector::new());
 }

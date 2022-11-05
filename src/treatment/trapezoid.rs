@@ -4,12 +4,15 @@ use opencv::imgcodecs::{IMREAD_COLOR};
 use opencv::types::{VectorOfPoint, VectorOfPoint2f, VectorOfVectorOfPoint};
 use crate::SOURCE_IMAGE_PATH;
 use crate::treatment::contours;
+use crate::pretreatment;
 
 // 台形補正
-pub fn correct_trapezoid(image: Mat) -> Mat {
+pub fn correct_trapezoid(src_img: Mat) -> Mat {
+    // 前処理
+    let img_pretreatment = pretreatment::run(src_img.clone());
 
     // 輪郭の抽出
-    let contours = get_contours(image);
+    let contours = get_contours(img_pretreatment);
 
     // 面積が最大になる輪郭を取得
     let max_contour = get_max_contours(contours);
@@ -65,16 +68,6 @@ pub fn correct_trapezoid(image: Mat) -> Mat {
         },
         Err(code) => {
             panic!("Error. Message: {}", code)
-        }
-    };
-
-    let src_img;
-    let result_read_img = opencv::imgcodecs::imread(SOURCE_IMAGE_PATH, IMREAD_COLOR);
-    match result_read_img {
-        Ok(img) => src_img = img,
-        Err(code) => {
-            print!("code: {:?}", code);
-            panic!();
         }
     };
 
