@@ -4,6 +4,7 @@ use opencv::imgcodecs::{IMREAD_GRAYSCALE, IMREAD_COLOR, imwrite};
 mod pretreatment;
 mod treatment;
 mod colors;
+mod ocr;
 
 const SOURCE_IMAGE_PATH: &str = "image.jpg";
 
@@ -33,6 +34,10 @@ fn main(){
     };
 
     let img_treatment = treatment::run(src_img);
+
+    let words = ocr::get_words(&img_treatment);
+
+    println!("OCR結果： `{}`", words);
 
     // 全ての処理が終わったあと、画像を出力する
     println!("画像を出力します。");
