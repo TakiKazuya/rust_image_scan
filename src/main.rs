@@ -35,7 +35,7 @@ fn main(){
 
     let img_treatment = treatment::run(src_img);
 
-    let words = ocr::get_words(&img_treatment);
+    let words = ocr::run(&img_treatment);
 
     println!("OCR結果： `{}`", words);
 
