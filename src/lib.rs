@@ -1,5 +1,5 @@
 #[no_mangle]
-pub extern fn run(path: &str) -> &str {
+pub extern fn run(path: String) -> String {
     println!("path: {}", path);
-    "hoge"
+    "hoge".to_string()
 }
